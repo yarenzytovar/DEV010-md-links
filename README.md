@@ -357,8 +357,8 @@ y en la consola/terminal.
 
 El proyecto se basa en un proceso lógico compuesto por diferentes pasos. Para
 comprender mejor lo que debes hacer y planificar tus tareas y objetivos, se
-recomienda desglosar el proceso en pasos y visualizarlo mediante un diagrama
-de flujo o escribiendo pseudocódigo
+recomienda desglosar el proceso en pasos y visualizarlo mediante un [diagrama
+de flujo](https://app.diagrams.net/) o escribiendo pseudocódigo
 
 ### **Sugerencias de implementación**
 
