@@ -244,7 +244,7 @@ Reflexiona y luego marca los objetivos que has llegado a entender y aplicar en t
 
 * El rango de tiempo estimado para completar el proyecto es de 3 a 5 sprints.
 
-* Consideramos los hitos 1 y 2 como los criterios de aceptación mínimos del proyecto.
+* 📝**Consideramos los hitos 1 y 2 como los criterios de aceptación mínimos del proyecto.** 👀
 
 * Enfócate en aprender y no solamente en "completar" todos los hitos del proyecto.
 
