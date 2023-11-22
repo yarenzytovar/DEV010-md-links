@@ -1,33 +1,59 @@
-// src/mdlinks.js
-const { readFile } = require('fs/promises');
-const path = require('path');
-const funciones = require('./funcion.js');
 
-async function mdLinks(filePath) {
-  try {
-    // Resuelve la ruta absoluta
+const fs = require('fs');
+const path = require('path');
+
+function mdLinks(filePath) {
+  return new Promise((resolve, reject) => {
+    // Transforma la ruta a absoluta
     const absolutePath = path.resolve(filePath);
 
-    // Verifica si la ruta existe
-    await funciones.pathExists(absolutePath);
+    // Comprueba que la ruta existe
+    if (!fs.existsSync(absolutePath)) {
+      reject(`La ruta '${absolutePath}' no existe.`);
+      return;
+    }
 
-    // Verifica si es un archivo Markdown
-    await funciones.isMarkdownFile(absolutePath);
+    // Asegúrate de que el archivo sea Markdown
+    const validExtensions = ['.md', '.mkd', '.mdwn', '.mdown', '.mdtxt', '.mdtext', '.markdown', '.text'];
+    const fileExtension = path.extname(absolutePath);
 
-    // Lee el contenido del archivo
-    const data = await readFile(absolutePath, 'utf-8');
+    if (!validExtensions.includes(fileExtension)) {
+      reject(`El archivo '${absolutePath}' no es de tipo Markdown.`);
+      return;
+    }
 
-    // Extrae los enlaces
-    const links = funciones.extractLinks(data, absolutePath);
+    // Lee el archivo
+    fs.readFile(absolutePath, 'utf-8', (err, data) => {
+      if (err) {
+        reject(`Error al leer el archivo '${absolutePath}': ${err.message}`);
+        return;
+      }
 
-    // Imprime los enlaces
-    console.log(links);
+      // Encuentra los enlaces con una expresión regular
+      const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
+      const links = [];
+      let match;
 
-    return links;
-  } catch (error) {
-    console.error('Error:', error);
-    return [];
-  }
+      while ((match = linkRegex.exec(data)) !== null) {
+        links.push({
+          text: match[1],
+          href: match[2],
+          file: absolutePath,
+        });
+      }
+
+      resolve(links);
+    });
+  });
 }
+
+// Ejemplo de uso:
+mdLinks('example/ejemplos.md')
+  .then((links) => {
+    console.log(links);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 module.exports = mdLinks;

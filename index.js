@@ -1,7 +1,6 @@
-// index.js
 const mdLinks = require('./src/mdlinks');
 
-mdLinks('src/example/ejemplos.md')
+mdLinks('src/example/ejemplos.md') 
   .then((links) => {
     console.log(links);
   })

@@ -1,5 +1,5 @@
-// src/funcion.js
-const { existsSync } = require('fs');
+
+const { existsSync, readdirSync } = require('fs');
 const path = require('path');
 const marked = require('marked');
 
@@ -9,13 +9,19 @@ function pathExists(filePath) {
   });
 }
 
+
 function isMarkdownFile(filePath) {
   const validExtensions = ['.md', '.mkd', '.mdwn', '.mdown', '.mdtxt', '.mdtext', '.markdown', '.text'];
   const fileExtension = path.extname(filePath);
 
-  return validExtensions.includes(fileExtension)
-    ? Promise.resolve()
-    : Promise.reject(`El archivo '${filePath}' no es de tipo Markdown.`);
+  console.log(`Checking file extension for ${filePath}: ${fileExtension}`);
+
+  const isMarkdown = validExtensions.includes(fileExtension);
+  if (!isMarkdown) {
+    console.log(`El archivo '${filePath}' no es de tipo Markdown.`);
+  }
+
+  return isMarkdown ? Promise.resolve() : Promise.reject(`El archivo '${filePath}' no es de tipo Markdown.`);
 }
 
 function extractLinks(data, filePath) {
