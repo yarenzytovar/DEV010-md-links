@@ -1,4 +1,5 @@
-const { existsSync, readdirSync } = require('fs');
+// src/funcion.js
+const { existsSync } = require('fs');
 const path = require('path');
 const marked = require('marked');
 
@@ -19,14 +20,18 @@ function isMarkdownFile(filePath) {
 
 function extractLinks(data, filePath) {
   const links = [];
-  const renderer = new marked.Renderer();
+  const tokens = marked.lexer(data);
 
   // Custom renderer to extract links
-  renderer.link = (href, title, text) => {
-    links.push({ href, text, file: filePath });
-  };
-
-  marked(data, { renderer });
+  tokens.forEach((token) => {
+    if (token.type === 'link') {
+      links.push({
+        href: token.href,
+        text: token.text,
+        file: filePath,
+      });
+    }
+  });
 
   return links;
 }

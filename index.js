@@ -1,20 +1,19 @@
 // index.js
+const mdLinks = require('./src/mdlinks');
 
-const mdLinks = require('./src/mdLinks');
-
-mdLinks('example/ejemplos.md')
+mdLinks('src/example/ejemplos.md')
   .then((links) => {
     console.log(links);
   })
   .catch(console.error);
 
-mdLinks('example/ejemplos.md', true)
+mdLinks('src/example/ejemplos.md', true)
   .then((links) => {
     console.log(links);
   })
   .catch(console.error);
 
-mdLinks('example/ejemplos.md', false)
+mdLinks('src/example/ejemplos.md', false)
   .then((links) => {
     console.log(links);
   })
