@@ -1,59 +1,67 @@
 
+const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
-function mdLinks(filePath) {
+function extractLinks(data, filePath) {
+  const links = [];
+  const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
+  let match;
+
+  while ((match = linkRegex.exec(data)) !== null) {
+    links.push({
+      href: match[2],
+      text: match[1],
+      file: filePath,
+    });
+  }
+
+  return links;
+}
+
+// Resto del código...
+
+function validateLink(link) {
+  return axios
+    .get(link.href)
+    .then((response) => ({
+      ...link,
+      status: response.status,
+      ok: response.status >= 200 && response.status < 400 ? 'OK' : 'Fail',
+    }))
+    .catch((error) => {
+      console.error(`Error validating link: ${link.href}`);
+      console.error(error);
+      return {
+        ...link,
+        status: error.response ? error.response.status : 'N/A',
+        ok: 'Fail',
+      };
+    });
+}
+
+function mdLinks(filePath, validate = false) {
   return new Promise((resolve, reject) => {
-    // Transforma la ruta a absoluta
     const absolutePath = path.resolve(filePath);
 
-    // Comprueba que la ruta existe
-    if (!fs.existsSync(absolutePath)) {
-      reject(`La ruta '${absolutePath}' no existe.`);
-      return;
-    }
-
-    // Asegúrate de que el archivo sea Markdown
-    const validExtensions = ['.md', '.mkd', '.mdwn', '.mdown', '.mdtxt', '.mdtext', '.markdown', '.text'];
-    const fileExtension = path.extname(absolutePath);
-
-    if (!validExtensions.includes(fileExtension)) {
-      reject(`El archivo '${absolutePath}' no es de tipo Markdown.`);
-      return;
-    }
-
-    // Lee el archivo
-    fs.readFile(absolutePath, 'utf-8', (err, data) => {
-      if (err) {
-        reject(`Error al leer el archivo '${absolutePath}': ${err.message}`);
-        return;
+    fs.readFile(absolutePath, 'utf8', (readError, data) => {
+      if (readError) {
+        return reject(readError);
       }
 
-      // Encuentra los enlaces con una expresión regular
-      const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
-      const links = [];
-      let match;
+      const links = extractLinks(data, absolutePath);
 
-      while ((match = linkRegex.exec(data)) !== null) {
-        links.push({
-          text: match[1],
-          href: match[2],
-          file: absolutePath,
-        });
+      if (!validate) {
+        return resolve(links);
       }
 
-      resolve(links);
+      const linkPromises = links.map(validateLink);
+
+      Promise.all(linkPromises)
+        .then((validatedLinks) => resolve(validatedLinks))
+        .catch((validationError) => reject(validationError));
     });
   });
 }
-
-// Ejemplo de uso:
-mdLinks('example/ejemplos.md')
-  .then((links) => {
-    console.log(links);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
 
 module.exports = mdLinks;
