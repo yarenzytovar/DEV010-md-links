@@ -1,7 +1,8 @@
-// mdlinks.js
+
+
 const { readFile } = require('fs/promises');
 const path = require('path');
-const funciones = require('./funciones');
+const funciones = require('/funcion.js');
 
 function mdLinks(filePath) {
   return new Promise((resolve, reject) => {
