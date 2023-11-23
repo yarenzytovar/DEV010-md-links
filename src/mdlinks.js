@@ -19,7 +19,6 @@ function extractLinks(data, filePath) {
   return links;
 }
 
-// Resto del código...
 
 function validateLink(link) {
   return axios
@@ -30,11 +29,11 @@ function validateLink(link) {
       ok: response.status >= 200 && response.status < 400 ? 'OK' : 'Fail',
     }))
     .catch((error) => {
-      console.error(`Error validating link: ${link.href}`);
-      console.error(error);
+      /*console.error(`Error validating link: ${link.href}`);
+      console.error(error);*/
       return {
         ...link,
-        status: error.response ? error.response.status : 'N/A',
+        status: error.response ? error.response.status : 400,
         ok: 'Fail',
       };
     });
