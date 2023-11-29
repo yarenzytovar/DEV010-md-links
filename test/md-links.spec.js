@@ -22,9 +22,10 @@ describe('mdLinks function', () => {
     axios.get.mockResolvedValue({ status: 200 });
 
     const linkToValidate = { href: 'http://www.google.com', text: 'Google', file: 'example.md' };
-    const validateLink = await validateLink(linkToValidate);
+    const validateLinkResult = await validateLink(linkToValidate);
+  
 
-    expect(validateLink).toEqual({
+    expect(validateLinkResult).toEqual({
       href: 'http://www.google.com',
       text: 'Google',
       file: 'example.md',
@@ -51,20 +52,20 @@ describe('mdLinks function', () => {
   test('should read file, extract links, and optionally validate', async () => {
     axios.get.mockResolvedValue({ status: 200 });
 
-    const links = await mdLinks('example.md', true);
+    const links = await mdLinks('test/example.md', true);
 
     expect(links).toEqual([
       {
         href: 'http://www.google.com',
         text: 'Google',
-        file: 'example.md',
+        file: 'C:\\laboratoria\\DEV010-md-links\\test\\example.md',
         status: 200,
         ok: 'OK',
       },
       {
         href: 'http://www.openai.com',
         text: 'OpenAI',
-        file: 'example.md',
+        file: 'C:\\laboratoria\\DEV010-md-links\\test\\example.md',
         status: 200,
         ok: 'OK',
       },
