@@ -1,4 +1,5 @@
-const mdLinks = require('./src/mdlinks.js');
+//index.js
+const {mdLinks} = require('./src/mdlinks.js');
 
 /*mdLinks('src/example/ejemplos.md') 
   .then((links) => {

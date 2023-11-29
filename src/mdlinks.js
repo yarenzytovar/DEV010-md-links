@@ -1,4 +1,4 @@
-
+//mdlinks.js
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -63,4 +63,5 @@ function mdLinks(filePath, validate = false) {
   });
 }
 
-module.exports = mdLinks;
+module.exports = {mdLinks, extractLinks, validateLink}
+

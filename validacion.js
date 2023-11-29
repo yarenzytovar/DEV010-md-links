@@ -1,6 +1,7 @@
+//validacion.js
+const marked = require('marked');
 const fs = require('fs');
 const path = require('path');
-const marked = require('marked');
 const axios = require('axios');
 
 function extractLinks(markdown, file) {
@@ -55,4 +56,4 @@ function mdLinks(filePath, validate = false) {
   });
 }
 
-module.exports = mdLinks;
+module.exports = {mdLinks, extractLinks, validateLink }
